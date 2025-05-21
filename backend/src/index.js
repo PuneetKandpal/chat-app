@@ -31,6 +31,7 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
 
 if (process.env.NODE_ENV === "production") {
+  console.log("Node Environment:", process.env.NODE_ENV);
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
   app.get("*", (req, res) => {
