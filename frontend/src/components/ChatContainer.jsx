@@ -66,6 +66,11 @@ const ChatContainer = () => {
               <time className="ml-1 text-xs opacity-50">
                 {formatMessageTime(message.createdAt)}
               </time>
+              {message.senderId === authUser._id && (
+                <span className="ml-1 text-xs opacity-50">
+                  {message.deliveredAt ? "✓✓" : "✓"}
+                </span>
+              )}
             </div>
             <div className="flex flex-col chat-bubble">
               {message.image && (

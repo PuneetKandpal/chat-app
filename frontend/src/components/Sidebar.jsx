@@ -26,10 +26,23 @@ const Sidebar = () => {
 
   useEffect(() => {
     getUsers();
-  }, [getUsers]);
+  }, [getUsers, onlineUsers]);
 
   useEffect(() => {
-    setFilteredUsers([...users]);
+
+    const usersWithOnlineFirst = users.sort((a, b) => {
+          const aIsOnline = onlineUsers.includes(a._id);
+          const bIsOnline = onlineUsers.includes(b._id);
+          if (aIsOnline && !bIsOnline) {
+            return -1; // a comes first
+          }
+          if (!aIsOnline && bIsOnline) {
+            return 1; // b comes first
+          }
+          return 0; // no change in order
+      })
+
+    setFilteredUsers([...usersWithOnlineFirst]);
   }, [users]);
 
   useEffect(() => {

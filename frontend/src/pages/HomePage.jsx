@@ -7,17 +7,19 @@ import { useEffect } from "react";
 
 const HomePage = () => {
   const { selectedUser } = useChatStore();
-  const { subscribeToStartTyping, subscribeToStopTyping, unsubscribeFromStartTyping, unsubscribeFromStopTyping, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
+  const { subscribeToStartTyping, subscribeToStopTyping, unsubscribeFromStartTyping, unsubscribeFromStopTyping, subscribeToMessages, unsubscribeFromMessages, subscribeToMessageDelivered, unsubscribeFromMessageDelivered } = useChatStore();
 
   useEffect(() => {
     subscribeToStartTyping();
     subscribeToStopTyping();
     subscribeToMessages();
+    subscribeToMessageDelivered();
 
     return () => {
       unsubscribeFromMessages();
       unsubscribeFromStartTyping();
-      unsubscribeFromStopTyping();  
+      unsubscribeFromStopTyping();
+      unsubscribeFromMessageDelivered();
     }
   }, []);
 

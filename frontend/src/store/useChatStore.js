@@ -137,8 +137,10 @@ export const useChatStore = create((set, get) => ({
 
     console.log("Attempting to subscribe to newMessage event.");
 
-    socket.on("newMessage", (newMessage) => {
+    socket.on("newMessage", (newMessage, ack) => {
       console.log("Raw newMessage received from socket:", JSON.stringify(newMessage, null, 2));
+      console.log("Acknowledging message",JSON.stringify(ack, null, 2));
+      ack({ status: "ok" }); // This matches what your server-side code expects
 
       const { selectedUser: currentSelectedUser, messages: currentStoreMessages } = get(); // Get fresh state
       const { authUser } = useAuthStore.getState();
@@ -247,6 +249,7 @@ export const useChatStore = create((set, get) => ({
     });
   },
 
+
   unsubscribeFromStopTyping: ()=>{
     const socket = useAuthStore.getState().socket;
     socket.off("endTyping");
@@ -268,6 +271,36 @@ export const useChatStore = create((set, get) => ({
     socket.emit("stopTyping", { fromUserId, toUserId: selectedUserId });
   },
 
+  subscribeToMessageDelivered: ()=>{
+    const socket = useAuthStore.getState().socket;
+    if (!socket) return; // Ensure socket is available
+
+    console.log("SUBSCRIBING TO MESSAGE DELIVERED");
+    //deliveredAt: "2025-05-21T07:39:42.635Z"
+    //messageId: "682d830fc0c71c07d560a72f"
+    //receiverId: "682d828ac0c71c07d560a6cb"
+
+    socket.on("messageDelivered", (messageData)=>{
+      console.log("MESSAGE DELIVERED", messageData);
+      const chatKey = `chat_${messageData.receiverId}`;
+      const localMessagesString = localStorage.getItem(chatKey);
+      console.log("Local messages string", localMessagesString);
+
+      if(!localMessagesString) return;
+      const localMessages = JSON.parse(localMessagesString);
+      const updatedMessages = localMessages.map(msg => msg._id === messageData.messageId ? {...msg, deliveredAt: messageData.deliveredAt} : msg);
+
+      console.log("Updated messages", updatedMessages);
+      set({ messages: updatedMessages });
+      localStorage.setItem(chatKey, JSON.stringify(updatedMessages));
+    });
+  },
+
+  unsubscribeFromMessageDelivered: ()=>{
+    const socket = useAuthStore.getState().socket;
+    socket.off("messageDelivered");
+  },
+  
   setSelectedUser: (selectedUser) => {
     set({ selectedUser });
     if (selectedUser && selectedUser._id) {
