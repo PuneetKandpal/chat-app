@@ -8,10 +8,15 @@ const MessageInput = () => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
-  const { sendMessage, emitStartTyping, emitStopTyping, selectedUser, isSendingMessage, usersTyping } =
-    useChatStore();
+  const {
+    sendMessage,
+    emitStartTyping,
+    emitStopTyping,
+    selectedUser,
+    isSendingMessage,
+    usersTyping,
+  } = useChatStore();
   const typingTimeoutRef = useRef(null);
-
 
   //   HANDLE START TYPING
   const handleStartTyping = () => {
@@ -51,7 +56,8 @@ const MessageInput = () => {
   useEffect(() => {
     // Cleanup function to emit stop typing when component unmounts or selectedUser changes
     return () => {
-      if (typingTimeoutRef.current) { // Check if there's an active timeout
+      if (typingTimeoutRef.current) {
+        // Check if there's an active timeout
         handleStopTyping();
       }
     };
@@ -88,7 +94,7 @@ const MessageInput = () => {
   const removeImage = () => {
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
-    if (text.trim() === "") { 
+    if (text.trim() === "") {
       handleStopTyping();
     }
   };
@@ -136,43 +142,55 @@ const MessageInput = () => {
         </div>
       )}
 
-      { usersTyping.has(selectedUser?._id) && <span className={`mx-4 my-1 animate-pulse absolute bottom-full left-0`}><span className="text-xs font-bold">{selectedUser?.fullName}</span><span className="text-xs font-normal">&nbsp;is typing...</span></span>}
+      <div className="flex flex-col w-full relative">
+        {true && (
+          <div className={`mx-4 animate-pulse ${usersTyping.has(selectedUser?._id) ? "visible" : "invisible"}`}>
+            <span className="text-xs font-extrabold">{selectedUser?.fullName}</span>
+            <span className="text-xs font-normal">&nbsp;is typing...</span>
+          </div>
+        )}
 
-      <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-        <div className="flex flex-1 gap-2">
-          <input
-            type="text"
-            className="w-full rounded-lg input input-bordered input-sm sm:input-md"
-            placeholder="Type a message..."
-            value={text}
-            onChange={handleTextChange}
-          />
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            ref={fileInputRef}
-            onChange={handleImageChange}
-            
-          />
+        <div className="height-[1px]"></div>
 
-          <button
-            type="button"
-            className={`hidden sm:flex btn btn-circle
+        <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+          <div className="flex flex-1 gap-2">
+            <input
+              type="text"
+              className="w-full rounded-lg input input-bordered input-sm sm:input-md"
+              placeholder="Type a message..."
+              value={text}
+              onChange={handleTextChange}
+            />
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              ref={fileInputRef}
+              onChange={handleImageChange}
+            />
+
+            <button
+              type="button"
+              className={`hidden sm:flex btn btn-circle
                      ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
-            onClick={() => fileInputRef.current?.click()}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Image size={20} />
+            </button>
+          </div>
+          <button
+            type="submit"
+            className="btn btn-sm btn-circle"
+            disabled={(!text.trim() && !imagePreview) || isSendingMessage}
           >
-            <Image size={20} />
+            {isSendingMessage ? (
+              <Loader className="size-5 animate-spin" />
+            ) : (
+              <Send size={20} />
+            )}
           </button>
-        </div>
-        <button
-          type="submit"
-          className="btn btn-sm btn-circle"
-          disabled={!text.trim() && !imagePreview || isSendingMessage}
-        >
-          {isSendingMessage ? <Loader className="size-5 animate-spin" /> : <Send size={20} />}
-        </button>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

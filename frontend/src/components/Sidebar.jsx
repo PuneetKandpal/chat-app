@@ -113,7 +113,7 @@ const Sidebar = () => {
           >
             <div className="relative mx-auto lg:mx-0">
               <img
-                src={user.profilePic || "/avatar.png"}
+                src={user.profilePic || `https://ui-avatars.com/api/?name=${user.fullName || user.email}&background=random`}
                 alt={user.name}
                 className="object-cover rounded-full size-12"
               />

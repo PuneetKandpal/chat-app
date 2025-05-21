@@ -55,8 +55,8 @@ const ChatContainer = () => {
                 <img
                   src={
                     message.senderId === authUser._id
-                      ? authUser.profilePic || "/avatar.png"
-                      : selectedUser.profilePic || "/avatar.png"
+                      ? authUser.profilePic || `https://ui-avatars.com/api/?name=${authUser.fullName || authUser.email}&background=random`
+                      : selectedUser.profilePic || `https://ui-avatars.com/api/?name=${selectedUser.fullName || selectedUser.email}&background=random`
                   }
                   alt="profile pic"
                 />
@@ -85,7 +85,6 @@ const ChatContainer = () => {
           </div>
         ))}
       </div>
-
       <MessageInput />
     </div>
   );
