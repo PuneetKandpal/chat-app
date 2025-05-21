@@ -49,15 +49,19 @@ Create a file named `.env` in the project root and add the following variables:
 # MongoDB connection URI (local or cloud)
 MONGODB_URI=<your_mongodb_connection_string>
 
-# Express server port\ nPORT=5001
+# Express server port
+PORT=5001
 
-# JWT secret for signing tokens\ nJWT_SECRET=<your_jwt_secret>
+# JWT secret for signing tokens
+JWT_SECRET=<your_jwt_secret>
 
-# Cloudinary credentials for image uploads\ nCLOUDINARY_CLOUD_NAME=<your_cloudinary_cloud_name>
+# Cloudinary credentials for image uploads
+CLOUDINARY_CLOUD_NAME=<your_cloudinary_cloud_name>
 CLOUDINARY_API_KEY=<your_cloudinary_api_key>
 CLOUDINARY_API_SECRET=<your_cloudinary_api_secret>
 
-# Node environment (development or production)\ nNODE_ENV=development
+# Node environment (development or production)
+NODE_ENV=development | production
 ```
 
 > **Tip:** Never commit your `.env` file to source control. Add it to your `.gitignore`.
