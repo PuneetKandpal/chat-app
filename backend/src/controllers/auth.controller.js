@@ -18,8 +18,8 @@ export const signup = async (req, res) => {
 
     if (user) return res.status(400).json({ message: "Email already exists" });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    //const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
       fullName,
@@ -49,14 +49,21 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
+
+  console.log("email", email);
+  console.log("password", password);
   try {
     const user = await User.findOne({ email });
+
+    console.log("user", user);
 
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+    
     if (!isPasswordCorrect) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
