@@ -2,9 +2,11 @@
 
 A real-time chat application that allows users to create accounts, log in/out, customize their UI theme, update profile pictures, and chat with multiple users simultaneously.
 
-🔗 Live Demo
+## 🔗 Live Demo
 
+#### Kindly wait for at least 1 to 2 minutes for server to spin up
 [cw.bridge](https://cw-bridge.onrender.com/)
+
 
 ## 🔧 Tech Stack
 
